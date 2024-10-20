@@ -3,6 +3,9 @@ import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 import dotenv from 'dotenv'
 import CentralizeRouter from './controller/route.js'
+import ConnectDatabase from './config/mongoDB.js'
+
+
 const app = express();
 
 dotenv.config()
@@ -15,6 +18,9 @@ const argv = yargs(hideBin(process.argv)) // Pass the command-line arguments
         description: 'Port to run the server on',
     })
     .argv;
+
+
+ConnectDatabase()
 
 app.use(express.json())
 
