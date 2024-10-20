@@ -13,11 +13,11 @@ const infoSchema = new mongoose.Schema({
 });
 
 const metainfoSchema = new mongoose.Schema({
+    author: { type: String, required: true },
     hashCode: { type: String, required: true, unique: true },
     announce: { type: String, required: true },   // can cai thien cai nay thanh list neu co nhieu tracker 
     creationDate: { type: Date, required: true },
     comment: { type: String, required: true },
-    createdBy: { type: String, required: true },  // peerid 
     info: { type: infoSchema, required: true }
 });
 
