@@ -78,7 +78,7 @@ const peerJoinNetwork = async (req, res) => {
     const network = torrentNetwork.find(e => e.hashCode === data.hashCode)
     if (network) {
         const isExist = network.peers?.find(e => e.peerId === data.peerId)
-        if (isExist) return res.status(200).json({ status: true, message: "Your has already join network" })
+        if (isExist) return res.status(200).json({ status: false, message: "Your has already join network" })
         network.peers?.push(peer)
         network[data.status]++;
     }
@@ -166,8 +166,6 @@ const subscribeChannel = (req, res) => {
     res.setHeader('Cache-Control', 'no-cache');
     res.setHeader('Connection', 'keep-alive');
     res.flushHeaders(); // Gửi header ngay lập tức
-
-    console.log(req.params.code);
 
     const hashCode = req.params.code
     const peerId = req.params.id
