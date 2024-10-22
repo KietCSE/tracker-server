@@ -15,4 +15,8 @@ router.get('/scrape/:code', (req, res) => {
     torrent.peerScrapeData(req, res)
 })
 
+router.get('/subscribe/:id/:code', (req, res) => {
+    torrent.subscribeChannel(req, res)
+})
+
 export default router
