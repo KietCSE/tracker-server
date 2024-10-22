@@ -11,6 +11,8 @@ router.post('/leave', (req, res) => {
     torrent.peerLeaveNetwork(req, res)
 })
 
-
+router.get('/scrape/:code', (req, res) => {
+    torrent.peerScrapeData(req, res)
+})
 
 export default router

@@ -66,7 +66,7 @@ const listUserRepo = async (req, res) => {
     const peerId = req.params.id
     if (!peerId) return res.status(401).json({ status: false, message: "Internal error, undefine peerId" })
 
-    const repo = await UserRepo.findOne({ peerId: peerId }).lean();
+    const repo = await UserRepo.findOne({ peerId: peerId }).select('-_id').lean();
     if (repo) {
         return res.status(200).json({ status: true, repo: repo.list })
     }
@@ -76,6 +76,9 @@ const listUserRepo = async (req, res) => {
 
 const deleteMetainfo = async (req, res) => {
     const data = req.body
+
+    console.log(data)
+
     if (!data || Object.keys(data).length === 0)
         return res.status(500).json({ status: false, message: "Internal error, undefine data" })
 
@@ -94,7 +97,7 @@ const deleteMetainfo = async (req, res) => {
             if (result.nModified === 0)
                 return res.status(500).json({ status: false, message: "Internal error, no user repo updated" });
 
-            return res.status(200).json({ status: true, message: `${data.hashCode} is removed` })
+            return res.status(200).json({ status: true, message: `Removed  ${data.hashCode}  ${findMetainfo.info?.name}` })
         }
     }
     catch (error) {

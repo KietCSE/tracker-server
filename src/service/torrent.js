@@ -16,15 +16,15 @@ const findMetainfo = async (hashCode) => {
 }
 
 const updateDownloaded = async (hashCode) => {
-    if (hashCode) return undefined
+    if (!hashCode) return undefined
     try {
-        const findDownloaded = Download.findOne({ hashCode: data.hashCode })
+        const findDownloaded = await Download.findOne({ hashCode: hashCode })
         if (findDownloaded) {
             await findDownloaded.updateOne({ $inc: { number: 1 } })
         }
         else {
             const downloadEntity = new Download({
-                hashCode: data.hashCode,
+                hashCode: hashCode,
                 number: 1
             })
             await downloadEntity.save()
@@ -90,7 +90,10 @@ const peerJoinNetwork = async (req, res) => {
 
     console.log("torrent network", JSON.stringify(torrentNetwork, null, 2));
 
-    const listPeers = network ? network.peers?.filter(e => e.peerId !== data.peerId) : []
+    const listPeers = network ? network.peers
+        ?.filter(e => e.peerId !== data.peerId)
+        .map(e => ({ peerId: e.peerId, port: e.port, ip: e.ip })) : [];
+
     res.status(200).json({ status: true, metainfo: metainfo, peers: listPeers })
 }
 
@@ -118,7 +121,8 @@ const peerLeaveNetwork = async (req, res) => {
         }
 
         if (data.complete) {
-            const result = updateDownloaded(data.hashCode)
+            const result = await updateDownloaded(data.hashCode)
+            console.log("update download")
             if (!result) res.status(500).json({ status: false, message: "Internal error, can save downloaded" })
         }
     }
@@ -130,8 +134,26 @@ const peerLeaveNetwork = async (req, res) => {
 }
 
 
+const peerScrapeData = async (req, res) => {
+    const magnet = req.params.code
+    const network = torrentNetwork.find(net => net.hashCode === magnet)
+    if (!network) return res.status(200).json({ status: false, message: "Torrent is not alive" })
+
+    const findDownloaded = await Download.findOne({ hashCode: magnet })
+    const downloaded = findDownloaded ? findDownloaded.number : 0
+
+    const data = {
+        fileName: network.fileName,
+        seeder: network.seeder,
+        leecher: network.leecher,
+        downloaded: downloaded
+    }
+    return res.status(200).json({ status: true, data })
+}
+
 
 export default {
     peerJoinNetwork,
     peerLeaveNetwork,
+    peerScrapeData
 }
