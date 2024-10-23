@@ -5,7 +5,6 @@ import dotenv from 'dotenv'
 import CentralizeRouter from './controller/route.js'
 import ConnectDatabase from './config/mongoDB.js'
 
-
 const app = express();
 
 dotenv.config()
@@ -23,6 +22,7 @@ const argv = yargs(hideBin(process.argv)) // Pass the command-line arguments
 ConnectDatabase()
 
 app.use(express.json())
+
 
 app.use(CentralizeRouter)
 
