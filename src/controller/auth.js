@@ -11,4 +11,8 @@ router.post('/login', (req, res) => {
     authentication.loginAccount(req, res)
 })
 
+router.get('/', (req, res) => {
+    res.send("WELCOME TO TUANKIET'S SERVER")
+})
+
 export default router
