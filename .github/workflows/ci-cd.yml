@@ -18,6 +18,11 @@ jobs:
                 
             - name: ssh to server 
               run: | 
-                ssh -o StrictHostKeyChecking=no -i "my-server.pem" ubuntu@ec2-52-194-193-253.ap-northeast-1.compute.amazonaws.com
-
+                ssh -o StrictHostKeyChecking=no -i "my-server.pem" ubuntu@ec2-52-194-193-253.ap-northeast-1.compute.amazonaws.com << EOF
+                  cd ~/home/ubuntu/torrent-app
+                  sudo docker-compose down 
+                  sudo docker-compose pull 
+                  sudo docker-compose up -d
+                  sudo docker system prune -f
+                EOF
               
