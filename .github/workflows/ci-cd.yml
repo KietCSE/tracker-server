@@ -1,0 +1,23 @@
+name: test SSH EC2 
+run-name: ${{ github.actor }} is trying to SSH to EC2
+
+on: 
+    push:
+        branches: [master]
+
+jobs: 
+    SSH-to-server: 
+        runs-on: ubuntu-latest
+        steps: 
+            - name: create pem file 
+              env:
+                EC2_PEM_KEY: ${{ secrets.EC2_PEM_KEY }} 
+              run: | 
+                echo "$EC2_PEM_KEY" | base64 -d > my-server.pem
+                chmod 600 my-server.pem
+                
+            - name: ssh to server 
+              run: | 
+                ssh -o StrictHostKeyChecking=no -i "my-server.pem" ubuntu@ec2-52-194-193-253.ap-northeast-1.compute.amazonaws.com
+
+              
