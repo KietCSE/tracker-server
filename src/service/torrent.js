@@ -45,12 +45,12 @@ const updateTorrent = async (req, res) => {
     if (!code) return res.status(401).json({ status: false, message: "Internal error" })
 
     await updateDownloaded(code)
-    const network = torrentNetwork.find(e => e.hashCode === code)
+    const network = torrentNetwork.find(e => e.hashCode === code)    
     if (network) {
         network.seeder++;
         if (network.leecher > 0) network.leecher--;
     }
-    console.log("torrent network", JSON.stringify(torrentNetwork, null, 2));
+    console.log("torrent network", JSON.stringify(torrentNetwork, null, 2));    
 
     return res.status(200).json({ status: true, message: "Update successfully" })
 }
