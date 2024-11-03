@@ -11,7 +11,7 @@ const saveMetainfoFile = async (req, res) => {
     try {
         // init metainfo file
         const findMetainfo = await Metainfo.findOne({ hashCode: data.hashCode })
-        if (findMetainfo) return res.status(200).json({ status: true, message: 'Metainfo has already exist' })
+        if (findMetainfo) return res.status(200).json({ status: false, message: 'Metainfo has already exist' })
 
         const metainfo = new Metainfo({
             author: data.author,
@@ -70,7 +70,7 @@ const listUserRepo = async (req, res) => {
     if (repo) {
         return res.status(200).json({ status: true, repo: repo.list })
     }
-    else return res.status(200).json({ status: true, message: "You haven't had a repo yet" })
+    else return res.status(200).json({ status: false, message: "You haven't had a repo yet" })
 }
 
 
