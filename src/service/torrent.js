@@ -40,6 +40,21 @@ const updateDownloaded = async (hashCode) => {
     }
 }
 
+const updateTorrent = async (req, res) => {
+    const code = req.params.code
+    if (!code) return res.status(401).json({ status: false, message: "Internal error" })
+
+    await updateDownloaded(code)
+    const network = torrentNetwork.find(e => e.hashCode === code)
+    if (network) {
+        network.seeder++;
+        if (network.leecher > 0) network.leecher--;
+    }
+    console.log("torrent network", JSON.stringify(torrentNetwork, null, 2));
+
+    return res.status(200).json({ status: true, message: "Update successfully" })
+}
+
 
 // const listPeerSchema = new mongoose.Schema({
 //     peerId: { type: String, required: true, unique: true },
@@ -85,8 +100,8 @@ const peerJoinNetwork = async (req, res) => {
     else {
         torrentNetwork.push({
             hashCode: data.hashCode,
-            seeder: data.event === 'complete' ? 1 : 0,
-            leecher: data.event === 'complete' ? 0 : 1,
+            seeder: data.status === 'seeder' ? 1 : 0,
+            leecher: data.status === 'leecher' ? 1 : 0,
             fileName: metainfo.info?.name,
             peers: [peer]
         })
@@ -192,7 +207,7 @@ const subscribeChannel = (req, res) => {
                     const torrent = torrentNetwork.filter(net => net.hashCode !== hashCode)
                     torrentNetwork = torrent
                 }
-                else network.leecher--;
+                else if (network.seeder > 0) network.seeder--;
 
                 console.log("Torrent network ", torrentNetwork)
             }
@@ -223,5 +238,6 @@ export default {
     peerJoinNetwork,
     peerLeaveNetwork,
     peerScrapeData,
-    subscribeChannel
+    subscribeChannel,
+    updateTorrent
 }

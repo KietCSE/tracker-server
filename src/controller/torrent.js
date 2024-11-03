@@ -19,4 +19,8 @@ router.get('/subscribe/:id/:code', (req, res) => {
     torrent.subscribeChannel(req, res)
 })
 
+router.get('/downloaded/:code', (req, res) => {
+    torrent.updateTorrent(req, res)
+})
+
 export default router
