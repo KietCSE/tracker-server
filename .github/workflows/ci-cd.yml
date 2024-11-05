@@ -9,20 +9,20 @@ jobs:
     SSH-to-server: 
         runs-on: ubuntu-latest
         steps: 
-            - name: checkout repository 
-              uses: actions/checkout@v3
+            # - name: checkout repository 
+            #   uses: actions/checkout@v3
 
-            - name: login dockerhub
-              uses: docker/login-action@v2
-              with:
-                username: kietcse 
-                password: ${{ secrets.DOCKER_TOKEN }} 
+            # - name: login dockerhub
+            #   uses: docker/login-action@v2
+            #   with:
+            #     username: kietcse 
+            #     password: ${{ secrets.DOCKER_TOKEN }} 
             
-            - name: build docker image 
-              run: docker build -t kietcse/tracker . 
+            # - name: build docker image 
+            #   run: docker build -t kietcse/tracker . 
             
-            - name: push docker hub 
-              run: docker push kietcse/tracker
+            # - name: push docker hub 
+            #   run: docker push kietcse/tracker
 
             - name: create pem file 
               env:
